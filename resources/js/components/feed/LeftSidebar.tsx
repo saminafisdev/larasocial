@@ -1,6 +1,89 @@
 import { Button } from '@/components/ui/button';
 import { Link } from '@inertiajs/react';
-import { Bell, House, MessageCircle, Settings, Users } from 'lucide-react';
+import { Bell, House, MessageCircle, RefreshCcw, Settings, Users } from 'lucide-react';
+
+import { useEffect, useState } from 'react';
+
+type WeatherData = {
+    location: {
+        name: string;
+    };
+    current: {
+        temp_c: number;
+        condition: {
+            text: string;
+            icon: string;
+        };
+    };
+};
+
+function WeatherWidget() {
+    const [weather, setWeather] = useState<WeatherData | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchWeather = () => {
+        setLoading(true);
+        setError(null);
+        fetch('http://api.weatherapi.com/v1/current.json?key=2e1dabad87db4ccca6c225439251207&q=Dhaka')
+            .then((res) => {
+                if (!res.ok) throw new Error('Failed to fetch weather');
+                return res.json();
+            })
+            .then((data) => {
+                setWeather(data);
+                setLoading(false);
+            })
+            .catch(() => {
+                setError('Could not load weather');
+                setLoading(false);
+            });
+    };
+
+    useEffect(() => {
+        fetchWeather();
+    }, []);
+
+    return (
+        <div className="mt-auto flex min-h-[120px] flex-col items-center justify-center rounded-lg bg-blue-50 p-4 text-center shadow-inner">
+            <div className="mb-1 flex items-center justify-center gap-2 text-sm text-gray-500">
+                Weather
+                <Button
+                    onClick={fetchWeather}
+                    title="Refresh weather"
+                    className="ml-1 rounded p-1 hover:bg-blue-500 focus:outline-none"
+                    aria-label="Refresh weather"
+                    type="button"
+                >
+                    <RefreshCcw />
+                </Button>
+            </div>
+            {loading ? (
+                <div className="text-sm text-gray-400">Loading...</div>
+            ) : error ? (
+                <div className="text-sm text-red-500">{error}</div>
+            ) : weather ? (
+                <>
+                    <div className="flex items-center justify-center gap-2">
+                        <img
+                            src={
+                                weather.current.condition.icon.startsWith('//')
+                                    ? `https:${weather.current.condition.icon}`
+                                    : weather.current.condition.icon
+                            }
+                            alt={weather.current.condition.text}
+                            className="h-10 w-10"
+                        />
+                        <span className="text-2xl font-bold text-blue-700">{Math.round(weather.current.temp_c)}°C</span>
+                    </div>
+                    <div className="text-sm text-gray-600">
+                        {weather.current.condition.text}, {weather.location.name}
+                    </div>
+                </>
+            ) : null}
+        </div>
+    );
+}
 
 export function LeftSidebar() {
     const links = [
@@ -32,6 +115,9 @@ export function LeftSidebar() {
                     </Link>
                 </Button>
             ))}
+
+            {/* Weather Information */}
+            <WeatherWidget />
         </aside>
     );
 }
