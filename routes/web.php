@@ -8,9 +8,14 @@ Route::get('/', function () {
     return Inertia::render('feed');
 })->name('feed');
 
+
 Route::get('/friends', function () {
     return Inertia::render('friends');
 })->name('friends');
+
+Route::get('/messages', function () {
+    return Inertia::render('messages');
+})->name('messages');
 
 Route::get('/@johndoe', function () {
     return Inertia::render('profile');
