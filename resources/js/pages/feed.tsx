@@ -1,20 +1,18 @@
 import { FeedPost } from '@/components/feed/FeedPost';
-import { LeftSidebar } from '@/components/feed/LeftSidebar';
-import { MainNavbar } from '@/components/feed/MainNavbar';
 import { PostComposer } from '@/components/feed/PostComposer';
 import { RightSidebar } from '@/components/feed/RightSidebar';
 
 export default function Feed() {
     return (
         <>
-            <MainNavbar />
+            {/* <MainNavbar /> */}
             {/* Main Feed Layout */}
             <main className="flex min-h-[calc(100vh-56px)] justify-center bg-gray-50 py-6">
                 <div className="flex w-full max-w-7xl gap-8">
                     {/* Left Sidebar */}
-                    <LeftSidebar />
+                    {/* <LeftSidebar /> */}
                     {/* Feed Content */}
-                    <div className="ml-0 flex max-w-2xl flex-1 flex-col gap-6 md:mr-[336px] md:ml-[336px]">
+                    <div className="ml-0 flex flex-1 flex-col gap-6">
                         <PostComposer />
                         {[1, 2, 3].map((id) => (
                             <FeedPost key={id} id={id} />

@@ -1,5 +1,3 @@
-import { LeftSidebar } from '@/components/feed/LeftSidebar';
-import { MainNavbar } from '@/components/feed/MainNavbar';
 import { RightSidebar } from '@/components/feed/RightSidebar';
 import { Button } from '@/components/ui/button';
 import { UserRoundPen } from 'lucide-react';
@@ -7,11 +5,11 @@ import { UserRoundPen } from 'lucide-react';
 export default function Profile() {
     return (
         <>
-            <MainNavbar />
+            {/* <MainNavbar /> */}
             <main className="flex min-h-[calc(100vh-56px)] justify-center bg-gray-50 py-6">
                 <div className="flex w-full max-w-7xl gap-8">
-                    <LeftSidebar />
-                    <div className="ml-0 flex max-w-2xl flex-1 flex-col gap-6 md:mr-[336px] md:ml-[336px]">
+                    {/* <LeftSidebar /> */}
+                    <div className="ml-0 flex flex-1 flex-col gap-6">
                         {/* Cover Photo Section */}
                         <div className="relative mb-8 w-full rounded-lg bg-white shadow">
                             <div className="h-48 w-full rounded-t-lg bg-gray-200">
