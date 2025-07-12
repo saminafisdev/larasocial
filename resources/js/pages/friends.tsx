@@ -1,24 +1,11 @@
 import { LeftSidebar } from '@/components/feed/LeftSidebar';
+import { MainNavbar } from '@/components/feed/MainNavbar';
 import { RightSidebar } from '@/components/feed/RightSidebar';
 
 export default function Friends() {
     return (
         <>
-            <nav className="sticky top-0 z-30 flex w-full items-center justify-between border-b bg-white px-4 py-2 shadow-sm">
-                <div className="flex items-center gap-4">
-                    <span className="text-2xl font-bold text-blue-600 select-none">Larasocial</span>
-                </div>
-                <div className="flex flex-1 justify-center px-4">
-                    <div className="w-full max-w-md">
-                        <input
-                            type="text"
-                            placeholder="Search friends..."
-                            className="rounded-full border-none bg-gray-100 px-5 py-2 shadow-sm focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-                </div>
-                <div />
-            </nav>
+            <MainNavbar />
             <main className="flex min-h-[calc(100vh-56px)] justify-center bg-gray-50 py-6">
                 <div className="flex w-full max-w-7xl gap-8">
                     <LeftSidebar />
