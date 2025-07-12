@@ -12,6 +12,10 @@ Route::get('/friends', function () {
     return Inertia::render('friends');
 })->name('friends');
 
+Route::get('/@johndoe', function () {
+    return Inertia::render('profile');
+})->name('profile');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
