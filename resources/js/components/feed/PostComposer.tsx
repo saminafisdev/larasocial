@@ -24,17 +24,18 @@ export function PostComposer() {
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-xl">
                             <DialogHeader>
-                                <DialogTitle>Create a post</DialogTitle>
+                                <DialogTitle className="text-center text-xl font-bold">Create a post</DialogTitle>
                                 {/* <DialogDescription>Make changes to your profile here. Click save when you&apos;re done.</DialogDescription> */}
                             </DialogHeader>
                             <div className="grid gap-4">
-                                <Textarea rows={8} />
+                                <Textarea className="md:text-2xl" placeholder="What's on your mind?" rows={6} />
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild>
-                                    <Button variant="outline">Cancel</Button>
+                                    <Button className="w-full" type="submit" disabled>
+                                        Post
+                                    </Button>
                                 </DialogClose>
-                                <Button type="submit">Post</Button>
                             </DialogFooter>
                         </DialogContent>
                     </form>
