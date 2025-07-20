@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { Link } from '@inertiajs/react';
+import { SharedData } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
 import { Bell, House, MessageCircle, Settings, Users } from 'lucide-react';
 
 export function LeftSidebar() {
@@ -10,6 +11,8 @@ export function LeftSidebar() {
         { href: '/notifications', icon: <Bell className="h-9 w-9" />, label: 'Notifications' },
         { href: '/settings', icon: <Settings className="h-9 w-9" />, label: 'Settings' },
     ];
+
+    const { auth } = usePage<SharedData>().props;
     return (
         <aside className="fixed top-[56px] left-0 hidden h-[calc(100vh-56px)] w-80 flex-col overflow-y-auto rounded-lg bg-white p-6 shadow md:flex">
             {/* Profile Button */}
@@ -20,7 +23,7 @@ export function LeftSidebar() {
                         alt="John Doe"
                         className="mr-4 h-12 w-12 rounded-full border-2 border-blue-200 object-cover shadow"
                     />
-                    <span className="text-lg font-semibold text-gray-900">John Doe</span>
+                    <span className="text-lg font-semibold text-gray-900">{auth.user.name}</span>
                 </Link>
             </Button>
             {/* Navigation Links */}
