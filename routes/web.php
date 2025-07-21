@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
@@ -22,7 +23,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('messages');
 
     Route::get('/@johndoe', function () {
-        return Inertia::render('profile');
+        $profile = \App\Models\Profile::where('user_id', Auth::id())->first();
+        return Inertia::render('profile', [
+            'profile' => $profile,
+        ]);
     })->name('profile');
 });
 

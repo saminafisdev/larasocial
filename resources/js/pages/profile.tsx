@@ -4,7 +4,7 @@ import { SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { UserRoundPen } from 'lucide-react';
 
-export default function Profile() {
+export default function Profile({ profile }) {
     const { auth } = usePage<SharedData>().props;
 
     return (
@@ -39,10 +39,8 @@ export default function Profile() {
                             {/* Profile Info below avatar */}
                             <div className="flex flex-col items-center px-4 pt-20 pb-8">
                                 <div className="text-2xl font-bold">{auth.user?.name}</div>
-                                <div className="text-lg text-gray-500">@johndoe</div>
-                                <div className="mt-2 max-w-xl text-center text-gray-700">
-                                    This is a sample profile bio. You can update this section to show user information, interests, and more.
-                                </div>
+                                <div className="text-lg text-gray-500">@{profile.username}</div>
+                                {profile.bio && <div className="mt-2 max-w-xl text-center text-gray-700">{profile.bio}</div>}
                                 <Button className="mt-4 rounded-full bg-blue-600 px-6 py-2 text-base font-medium text-white hover:bg-blue-700">
                                     Edit Profile <UserRoundPen />
                                 </Button>
