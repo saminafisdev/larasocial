@@ -1,39 +1,26 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Post } from '@/types/post';
 import { Bookmark, MessageCircle, Share2, ThumbsUp } from 'lucide-react';
 
-interface FeedPostProps {
-    id: number;
-    user?: string;
-    avatar?: string;
-    time?: string;
-    content?: string;
-}
-
-export function FeedPost({
-    id,
-    user = `User ${id}`,
-    avatar = `/avatar${id}.png`,
-    time = 'Just now',
-    content = 'This is a sample post for the feed. You can replace this with real data.',
-}: FeedPostProps) {
+export function FeedPost({ post }: { post: Post }) {
     return (
         <Card className="gap-3 shadow">
             <CardHeader className="flex flex-row items-center gap-3 pb-2">
                 <Avatar className="h-10 w-10">
-                    <AvatarImage src={avatar} alt="User" />
-                    <AvatarFallback>U</AvatarFallback>
+                    <AvatarImage src={post?.profile?.avatar} alt="User" />
+                    <AvatarFallback>{post.profile?.user.name[0]}</AvatarFallback>
                 </Avatar>
                 <div>
-                    <CardTitle className="text-base leading-tight font-semibold">{user}</CardTitle>
-                    <CardDescription className="text-xs text-gray-500">{time}</CardDescription>
+                    <CardTitle className="text-base leading-tight font-semibold">{post?.profile?.user.name}</CardTitle>
+                    <CardDescription className="text-xs text-gray-500">{post.updated_at_human}</CardDescription>
                 </div>
             </CardHeader>
             <CardContent className="py-2">
-                <div className="mb-4 text-[15px] text-gray-800">{content}</div>
+                <div className="mb-4 text-[15px] text-gray-800">{post.content}</div>
                 <div>
-                    <img src={`https://picsum.photos/id/${id}/800/`} className="w-full" alt="" />
+                    <img src={`https://picsum.photos/id/${post.id}/800/`} className="w-full" alt="" />
                 </div>
             </CardContent>
             <CardFooter className="mt-2 flex justify-between gap-4 border-t pt-2 text-sm text-gray-500">

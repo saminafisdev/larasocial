@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +11,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('/', function () {
-        return Inertia::render('feed');
+        $posts = Post::with(['profile.user', 'comments.profile'])->latest()->get();
+
+        // Add human readable updated_at to each post
+        $posts->transform(function ($post) {
+            $post->updated_at_human = $post->updated_at->diffForHumans();
+            return $post;
+        });
+        return Inertia::render('feed', [
+            'posts' => $posts,
+        ]);
     })->name('feed');
 
 

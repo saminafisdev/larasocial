@@ -1,8 +1,9 @@
 import { FeedPost } from '@/components/feed/FeedPost';
 import { PostComposer } from '@/components/feed/PostComposer';
 import { RightSidebar } from '@/components/feed/RightSidebar';
+import { Post } from '@/types/post';
 
-export default function Feed() {
+export default function Feed({ posts }: { posts: Post[] }) {
     return (
         <>
             {/* <MainNavbar /> */}
@@ -14,8 +15,8 @@ export default function Feed() {
                     {/* Feed Content */}
                     <div className="ml-0 flex flex-1 flex-col gap-6">
                         <PostComposer />
-                        {[1, 2, 3].map((id) => (
-                            <FeedPost key={id} id={id} />
+                        {posts.map((post) => (
+                            <FeedPost key={post.id} post={post} />
                         ))}
                     </div>
                     {/* Right Sidebar */}
