@@ -1,0 +1,92 @@
+@startuml use_case
+left to right direction
+
+actor User
+actor Admin
+actor Moderator
+
+package "Authentication" {
+  User --> (Register)
+  User --> (Login)
+  User --> (Logout)
+}
+
+package "User & Profile" {
+  User --> (View Profile)
+  User --> (Edit Profile)
+  User --> (Set Privacy Settings)
+}
+
+package "Posts" {
+  User --> (Create Post)
+  User --> (View Feed)
+  User --> (Edit Post)
+  User --> (Delete Post)
+  User --> (Save Post)
+  User --> (Unsave Post)
+
+  Admin --> (Delete Post)
+  Moderator --> (Approve/Reject Post)
+}
+
+package "Comments" {
+  User --> (Comment on Post)
+  User --> (Reply to Comment)
+  User --> (Delete Comment)
+
+  Admin --> (Delete Comment)
+  Moderator --> (Moderate Comment)
+}
+
+package "Reactions" {
+  User --> (React to Post)
+  User --> (React to Comment)
+}
+
+package "Media" {
+  User --> (Upload Media)
+  User --> (View Media)
+  User --> (Download Media)
+}
+
+package "Notifications" {
+  User --> (View Notifications)
+  User --> (Mark Notifications as Read)
+
+  Admin --> (Send Announcement Notification)
+}
+
+package "Friends" {
+  User --> (Send Friend Request)
+  User --> (Accept Friend Request)
+  User --> (Decline Friend Request)
+  User --> (Unfriend)
+  User --> (View Friend List)
+}
+
+package "Messages" {
+  User --> (Send Message)
+  User --> (Receive Message)
+  User --> (View Chat History)
+}
+
+package "Saved Posts" {
+  User --> (View Saved Posts)
+  User --> (Remove Saved Post)
+}
+
+package "Settings" {
+  User --> (Change Password)
+  User --> (Set Notification Preferences)
+  User --> (Set Privacy Preferences)
+}
+
+package "Moderation" {
+  Admin --> (Ban User)
+  Admin --> (Unban User)
+  Admin --> (View Reports)
+
+  Moderator --> (View Reports)
+  Moderator --> (Mute User)
+}
+@enduml

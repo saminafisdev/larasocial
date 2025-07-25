@@ -1,0 +1,116 @@
+@startuml
+!theme mars
+
+title Social Network App Deployment Diagram
+
+skinparam linetype ortho
+
+' Define client devices that interact with the application
+node "Client Devices" as Clients {
+    component "Web Browser" as Browser
+    component "Mobile App" as Mobile
+}
+
+' Represent the internet as a cloud for external communication
+cloud "Internet" as Internet
+
+' Define external services, specifically Google Cloud for OAuth
+cloud "Google Cloud" as GoogleCloud {
+    component "Google OAuth 2.0 API" as GoogleOAuth
+}
+
+' Main node representing your local development environment
+node "Local Development Environment" as LocalEnv {
+
+    ' Web Server handling incoming HTTP requests
+    node "Web Server\n(Nginx/Apache)" as WebServer
+
+    ' Application Layer containing PHP-FPM, Laravel, and related services
+    node "Application Layer" as AppLayer {
+        component "PHP-FPM" as PHPFPM
+        component "Laravel Application" as LaravelApp {
+            ' Package to group the core application models
+            package "Core Models" {
+                artifact "User" as UserModel
+                artifact "Post" as PostModel
+                artifact "Comment" as CommentModel
+                artifact "Reaction" as ReactionModel
+                artifact "Notification" as NotificationModel
+                artifact "Settings" as SettingsModel
+                artifact "Profile" as ProfileModel
+                artifact "Messages" as MessagesModel
+            }
+            ' Laravel's built-in authentication module
+            component "Laravel Auth" as LaravelAuth
+            ' Placeholder for other Facebook-like features
+            component "Other Features\n(Feeds, Search, Groups, Pages)" as OtherFeatures
+        }
+        ' Component for handling background tasks and jobs
+        component "Queue Worker" as QueueWorker
+        ' Component for caching data to improve performance
+        component "Caching (Redis/Memcached)" as Cache
+    }
+
+    ' PostgreSQL database for persistent data storage
+    database "PostgreSQL Database" as PostgreSQL {
+        ' Folder to represent the various data tables
+        folder "Data Tables" {
+            artifact "Users" as UsersDB
+            artifact "Posts" as PostsDB
+            artifact "Comments" as CommentsDB
+            artifact "Reactions" as ReactionsDB
+            artifact "Notifications" as NotificationsDB
+            artifact "Settings" as SettingsDB
+            artifact "Profiles" as ProfilesDB
+            artifact "Messages" as MessagesDB
+        }
+    }
+}
+
+' Define the connections and interactions between components
+
+' Clients communicate with the web server via the internet
+Clients --> Internet : HTTP/HTTPS
+Internet --> WebServer : Requests
+
+' Web server forwards requests to PHP-FPM
+WebServer --> PHPFPM : FastCGI/HTTP
+
+' PHP-FPM executes the Laravel application
+PHPFPM --> LaravelApp : Executes Code
+
+' Laravel Application interactions
+LaravelApp --> PostgreSQL : ORM Queries (Eloquent) ' Laravel interacts with DB using ORM
+LaravelApp --> LaravelAuth : Built-in Auth         ' Laravel uses its own auth system
+LaravelApp --> QueueWorker : Dispatches Jobs        ' Laravel dispatches jobs to the queue
+LaravelApp --> Cache : Read/Write                   ' Laravel uses cache for performance
+
+' Laravel Auth interacts with Google OAuth for external authentication
+LaravelAuth --> GoogleOAuth : OAuth Flow
+
+' Queue Worker interactions
+QueueWorker --> PostgreSQL : Background Processing  ' Queue worker processes data and updates DB
+QueueWorker --> Cache : Cache Invalidation          ' Queue worker can invalidate cache
+
+' Conceptual relationships within Laravel App (indicating models are part of the app)
+LaravelApp ..> UserModel
+LaravelApp ..> PostModel
+LaravelApp ..> CommentModel
+LaravelApp ..> ReactionModel
+LaravelApp ..> NotificationModel
+LaravelApp ..> SettingsModel
+LaravelApp ..> ProfileModel
+LaravelApp ..> MessagesModel
+LaravelApp ..> OtherFeatures
+
+' Conceptual relationships within PostgreSQL (indicating tables are part of the DB)
+PostgreSQL ..> UsersDB
+PostgreSQL ..> PostsDB
+PostgreSQL ..> CommentsDB
+PostgreSQL ..> ReactionsDB
+PostgreSQL ..> NotificationsDB
+PostgreSQL ..> SettingsDB
+PostgreSQL ..> ProfilesDB
+PostgreSQL ..> MessagesDB
+
+@enduml

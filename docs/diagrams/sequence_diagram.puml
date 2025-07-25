@@ -1,0 +1,33 @@
+@startuml sequence_diagram
+actor User
+actor Friend
+actor Moderator
+
+participant "Auth Service" as Auth
+participant "Post Service" as Post
+participant "Notification Service" as Notify
+participant "Feed Service" as Feed
+participant "Moderation Service" as Mod
+
+== User Logs In ==
+User -> Auth : Login(credentials)
+Auth --> User : Token
+
+== User Creates a Post ==
+User -> Post : CreatePost(content, media)
+Post -> Notify : NotifyFollowers(postId)
+Post --> User : PostCreated(postId)
+
+== Friend Views Feed ==
+Friend -> Feed : GetFeed()
+Feed -> Post : FetchLatestPosts()
+Post --> Feed : PostsList
+Feed --> Friend : RenderFeed(posts)
+
+== Moderator Reviews a Post ==
+Moderator -> Mod : ViewReportedPosts()
+Mod -> Post : GetPostDetails(postId)
+Post --> Mod : PostDetails
+Mod --> Moderator : Show for Review
+
+@enduml

@@ -1,0 +1,36 @@
+@startuml activity_diagram
+start
+
+:User logs in;
+:Check authentication;
+if (Authenticated?) then (yes)
+  :User opens post editor;
+  :User writes content;
+  :User attaches media?;
+  :User adds tags/location?;
+  :Preview post;
+  if (Is content valid?) then (yes)
+    :Submit post;
+    :Save post to database;
+    :Update user activity log;
+    :Generate feed entry;
+    :Notify followers asynchronously;
+    :Update followers' feed cache;
+    if (Post flagged?) then (yes)
+      :Send post to Moderation Service;
+    else (no)
+      if (Scheduled post?) then (yes)
+        :Schedule for future publishing;
+      else (no)
+        :Mark post as published;
+      endif
+    endif
+  else (no)
+    :Show validation error;
+  endif
+else (no)
+  :Show login error;
+endif
+
+stop
+@enduml

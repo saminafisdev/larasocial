@@ -1,0 +1,125 @@
+@startuml
+
+' Entities
+class User {
+  +id: UUID
+  +email: String
+  +passwordHash: String
+  +createdAt: DateTime
+  +isActive: Boolean
+  ---
+  +login()
+  +logout()
+}
+
+class Profile {
+  +id: UUID
+  +userId: UUID
+  +username: String
+  +bio: String
+  +profilePicture: String
+  +coverPhoto: String
+  +privacySetting: String
+  ---
+  +editProfile()
+}
+
+class Post {
+  +id: UUID
+  +userId: UUID
+  +content: String
+  +createdAt: DateTime
+  +updatedAt: DateTime
+  ---
+  +createPost()
+  +editPost()
+  +deletePost()
+}
+
+class Comment {
+  +id: UUID
+  +postId: UUID
+  +userId: UUID
+  +parentCommentId: UUID
+  +content: String
+  +createdAt: DateTime
+  ---
+  +addComment()
+  +deleteComment()
+}
+
+class Reaction {
+  +id: UUID
+  +userId: UUID
+  +postId: UUID
+  +commentId: UUID
+  +type: String
+  +createdAt: DateTime
+}
+
+class Media {
+  +id: UUID
+  +postId: UUID
+  +url: String
+  +type: String
+  +uploadedAt: DateTime
+}
+
+class Notification {
+  +id: UUID
+  +userId: UUID
+  +type: String
+  +message: String
+  +isRead: Boolean
+  +createdAt: DateTime
+}
+
+class FriendRequest {
+  +id: UUID
+  +senderId: UUID
+  +receiverId: UUID
+  +status: String
+  +createdAt: DateTime
+}
+
+class Message {
+  +id: UUID
+  +senderId: UUID
+  +receiverId: UUID
+  +content: String
+  +sentAt: DateTime
+  +isRead: Boolean
+}
+
+class SavedPost {
+  +id: UUID
+  +userId: UUID
+  +postId: UUID
+  +savedAt: DateTime
+}
+
+class Settings {
+  +id: UUID
+  +userId: UUID
+  +notificationPreferences: String
+  +privacyPreferences: String
+  +language: String
+}
+
+' Relationships
+User "1" -- "1" Profile
+User "1" -- "0..*" Post
+User "1" -- "0..*" Comment
+User "1" -- "0..*" Reaction
+User "1" -- "0..*" FriendRequest : sends/receives
+User "1" -- "0..*" Message : sends/receives
+User "1" -- "0..*" SavedPost
+User "1" -- "1" Settings
+Post "1" -- "0..*" Comment
+Post "1" -- "0..*" Reaction
+Post "1" -- "0..*" Media
+Post "1" -- "0..*" SavedPost
+Comment "1" -- "0..*" Reaction
+User "1" -- "0..*" Notification
+
+@enduml
