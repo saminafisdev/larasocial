@@ -5,23 +5,32 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { SharedData } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
+import { toast } from 'sonner';
 
 export function PostComposer() {
     const { auth } = usePage<SharedData>().props;
-    const { data, setData, post, processing } = useForm({
+    const { data, setData, post, processing, reset } = useForm({
         content: '',
     });
 
     function onPostSubmit(e: React.FormEvent) {
         e.preventDefault();
-        post('/posts', {
-            onSuccess: () => {
-                setData('content', ''); // Clear the content after successful post
+        toast.promise(
+            new Promise((resolve, reject) => {
+                post('/posts', {
+                    onSuccess: () => {
+                        resolve('success');
+                        reset();
+                    },
+                    onError: () => reject(new Error('error')),
+                });
+            }),
+            {
+                loading: 'Posting',
+                success: 'Post created successfully',
+                error: 'Failed to create post',
             },
-            onError: (errors) => {
-                console.error(errors); // Handle errors if needed
-            },
-        });
+        );
     }
 
     return (
