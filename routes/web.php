@@ -33,6 +33,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
     })->name('posts.show');
 
+    Route::post('/posts', function () {
+        $data = request()->validate([
+            'content' => 'required|string',
+        ]);
+
+        Post::create([
+            'profile_id' => Auth::user()->profile->id,
+            'content' => $data['content'],
+        ]);
+
+        return redirect()->route('feed');
+    })->name('posts.store');
+
+
     Route::get('/friends', function () {
         return Inertia::render('friends');
     })->name('friends');

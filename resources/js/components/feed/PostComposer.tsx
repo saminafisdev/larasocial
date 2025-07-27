@@ -3,26 +3,45 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { SharedData } from '@/types';
+import { useForm, usePage } from '@inertiajs/react';
 
 export function PostComposer() {
+    const { auth } = usePage<SharedData>().props;
+    const { data, setData, post, processing } = useForm({
+        content: '',
+    });
+
+    function onPostSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        post('/posts', {
+            onSuccess: () => {
+                setData('content', ''); // Clear the content after successful post
+            },
+            onError: (errors) => {
+                console.error(errors); // Handle errors if needed
+            },
+        });
+    }
+
     return (
         <div className="flex flex-col gap-3 rounded-lg bg-white p-4 shadow">
             <div className="flex items-center gap-3">
                 <Avatar className="h-10 w-10">
                     <AvatarImage src="/avatar.png" alt="User" />
-                    <AvatarFallback>U</AvatarFallback>
+                    <AvatarFallback>{auth.user.name[0]}</AvatarFallback>
                 </Avatar>
 
                 <Dialog>
-                    <form className="flex-1 sm:max-w-[600px]">
-                        <DialogTrigger asChild>
-                            <Input
-                                type="text"
-                                placeholder="What's on your mind?"
-                                className="cursor-default rounded-full border-none bg-gray-100 px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                            />
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-xl">
+                    <DialogTrigger asChild>
+                        <Input
+                            type="text"
+                            placeholder="What's on your mind?"
+                            className="cursor-default rounded-full border-none bg-gray-100 px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                        />
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-xl">
+                        <form onSubmit={onPostSubmit} className="flex-1 sm:max-w-[600px]">
                             <DialogHeader>
                                 <DialogTitle className="text-center text-xl font-bold">Create a post</DialogTitle>
                                 {/* <DialogDescription>Make changes to your profile here. Click save when you&apos;re done.</DialogDescription> */}
@@ -31,12 +50,18 @@ export function PostComposer() {
                             <div className="mb-2 flex items-center gap-3">
                                 <Avatar className="h-10 w-10">
                                     <AvatarImage src="/avatar.png" alt="User" />
-                                    <AvatarFallback>U</AvatarFallback>
+                                    <AvatarFallback>{auth.user.name[0]}</AvatarFallback>
                                 </Avatar>
-                                <span className="text-lg font-semibold">John Doe</span>
+                                <span className="text-lg font-semibold">{auth.user.name}</span>
                             </div>
                             <div className="grid gap-4">
-                                <Textarea className="md:text-2xl" placeholder="What's on your mind?" rows={6} />
+                                <Textarea
+                                    value={data.content}
+                                    onChange={(e) => setData('content', e.target.value)}
+                                    className="md:text-2xl"
+                                    placeholder="What's on your mind?"
+                                    rows={6}
+                                />
                             </div>
                             {/* Add to your post box */}
                             <div className="mt-4 rounded-lg bg-gray-100 px-4 py-3">
@@ -88,15 +113,15 @@ export function PostComposer() {
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild>
-                                    <Button className="w-full" type="submit" disabled>
+                                    <Button className="w-full" type="submit" disabled={processing}>
                                         Post
                                     </Button>
                                 </DialogClose>
                             </DialogFooter>
-                        </DialogContent>
-                    </form>
+                        </form>
+                    </DialogContent>
                 </Dialog>
-                <Button className="rounded-full bg-blue-600 px-6 text-white hover:bg-blue-700">Post</Button>
+                {/* <Button className="rounded-full bg-blue-600 px-6 text-white hover:bg-blue-700">Post</Button> */}
             </div>
         </div>
     );
