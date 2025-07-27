@@ -49,6 +49,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return redirect()->route('feed');
     })->name('posts.store');
 
+    Route::delete('/posts/{post}', function (Post $post) {
+        if ($post->profile->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $post->delete();
+        return redirect()->route('feed');
+    })->name('posts.destroy');
+
     Route::get('/friends', function () {
         return Inertia::render('friends');
     })->name('friends');

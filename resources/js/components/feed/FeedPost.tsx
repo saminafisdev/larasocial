@@ -1,14 +1,38 @@
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { SharedData } from '@/types';
 import { Post } from '@/types/post';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import { Bookmark, Ellipsis, MessageCircle, Pencil, Share2, ThumbsUp, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export function FeedPost({ post }: { post: Post }) {
     const { auth } = usePage<SharedData>().props;
+    const { delete: destroy } = useForm();
+
+    function deletePost() {
+        destroy(`/posts/${post.id}`, {
+            onSuccess: () => {
+                toast('Post deleted successfully');
+            },
+            onError: () => {
+                toast.error('Failed to delete post');
+            },
+        });
+    }
 
     return (
         <Card className="gap-3 shadow">
@@ -33,8 +57,28 @@ export function FeedPost({ post }: { post: Post }) {
                                 <DropdownMenuItem>
                                     <Pencil /> Edit Post
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <Trash2 className="text-red-500" /> Delete Post
+                                <DropdownMenuItem asChild>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant="ghost" size="sm">
+                                                <Trash2 className="text-red-500" /> Delete Post
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Are you sure you want to delete this post?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This action cannot be undone. This will permanently delete your post.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction className="bg-red-800 hover:bg-red-700" onClick={deletePost}>
+                                                    Yes, delete post
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
