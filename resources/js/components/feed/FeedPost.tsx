@@ -1,11 +1,15 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { SharedData } from '@/types';
 import { Post } from '@/types/post';
-import { Link } from '@inertiajs/react';
-import { Bookmark, MessageCircle, Share2, ThumbsUp } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { Bookmark, Ellipsis, MessageCircle, Pencil, Share2, ThumbsUp, Trash2 } from 'lucide-react';
 
 export function FeedPost({ post }: { post: Post }) {
+    const { auth } = usePage<SharedData>().props;
+
     return (
         <Card className="gap-3 shadow">
             <CardHeader className="flex flex-row items-center gap-3 pb-2">
@@ -19,6 +23,23 @@ export function FeedPost({ post }: { post: Post }) {
                         <Link href={`/${post.profile?.username}/posts/${post.id}`}>{post.updated_at_human}</Link>
                     </CardDescription>
                 </div>
+                {post.profile?.user.id === auth.user.id && (
+                    <CardAction className="ml-auto">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
+                                <Ellipsis />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>
+                                    <Pencil /> Edit Post
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <Trash2 className="text-red-500" /> Delete Post
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </CardAction>
+                )}
             </CardHeader>
             <CardContent className="py-2">
                 <div className="mb-4 text-[15px] text-gray-800">{post.content}</div>

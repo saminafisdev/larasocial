@@ -22,4 +22,5 @@ export default defineConfig({
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
         },
     },
+    base: process.env.APP_URL ? new URL(process.env.APP_URL).pathname : '/',
 });
