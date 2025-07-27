@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Post } from '@/types/post';
+import { Link } from '@inertiajs/react';
 import { Bookmark, MessageCircle, Share2, ThumbsUp } from 'lucide-react';
 
 export function FeedPost({ post }: { post: Post }) {
@@ -14,7 +15,9 @@ export function FeedPost({ post }: { post: Post }) {
                 </Avatar>
                 <div>
                     <CardTitle className="text-base leading-tight font-semibold">{post?.profile?.user.name}</CardTitle>
-                    <CardDescription className="text-xs text-gray-500">{post.updated_at_human}</CardDescription>
+                    <CardDescription className="text-xs text-gray-500">
+                        <Link href={`/${post.profile?.username}/posts/${post.id}`}>{post.updated_at_human}</Link>
+                    </CardDescription>
                 </div>
             </CardHeader>
             <CardContent className="py-2">
