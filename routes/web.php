@@ -23,6 +23,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
     })->name('feed');
 
+    Route::get('/{username}/posts/{post}', function ($username, Post $post) {
+        if ($post->profile->username !== $username) {
+            abort(404);
+        }
+        $post->updated_at_human = $post->updated_at->diffForHumans();
+        return Inertia::render('post', [
+            'post' => $post->load('profile.user'),
+        ]);
+    })->name('posts.show');
 
     Route::get('/friends', function () {
         return Inertia::render('friends');
