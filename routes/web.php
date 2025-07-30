@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -34,7 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('post', [
             'post' => $post,
         ]);
-    });
+    })->name('posts.show');
 
     Route::post('/posts', function () {
         $validated = request()->validate([
@@ -57,6 +58,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $post->delete();
         return redirect()->route('feed');
     })->name('posts.destroy');
+
+    // Comments
+    Route::post('/{username}/posts/{post}/comments', function (String $username, Post $post) {
+        $validated = request()->validate([
+            'content' => 'required|string',
+        ]);
+
+        Comment::create([
+            'content'=> $validated['content'],
+            'profile_id' => Auth::user()->profile->id,
+            'post_id' => $post->id,
+        ]);
+
+        return redirect()->route('posts.show', ['username'=> $username, 'post'=> $post->id]);
+    });
 
     Route::get('/friends', function () {
         return Inertia::render('friends');
