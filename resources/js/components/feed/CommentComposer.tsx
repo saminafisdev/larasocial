@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Post } from '@/types/post';
 import { useForm } from '@inertiajs/react';
@@ -28,18 +28,28 @@ export default function CommentComposer({ post }: { post: Post }) {
         <Card>
             <CardHeader>
                 <CardTitle>Post a comment</CardTitle>
-                <CardAction>Card Action</CardAction>
             </CardHeader>
             <CardContent>
-                <form id="commentForm" onSubmit={postComment}>
-                    <Textarea value={data.content} onChange={(e) => setData('content', e.target.value)} />
+                <form onSubmit={postComment}>
+                    <div className="flex flex-col items-end rounded-lg border border-input focus-within:border-ring">
+                        <Textarea
+                            value={data.content}
+                            onChange={(e) => setData('content', e.target.value)}
+                            className="flex-1 resize-none rounded-md border-none shadow-none focus-visible:border-none focus-visible:ring-0"
+                            required
+                        />
+                        <Button
+                            type="submit"
+                            variant="ghost"
+                            size="icon"
+                            className={`rounded-full ${!data.content ? 'cursor-not-allowed' : 'cursor-pointer'} group`}
+                            disabled={!data.content}
+                        >
+                            <SendHorizontal className="text-gray-400 transition-colors group-hover:text-blue-500" />
+                        </Button>
+                    </div>
                 </form>
             </CardContent>
-            <CardFooter>
-                <Button type="submit" form="commentForm" variant="secondary" size="icon" className="size-8">
-                    <SendHorizontal />
-                </Button>
-            </CardFooter>
         </Card>
     );
 }
