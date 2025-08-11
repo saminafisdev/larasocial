@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class Like extends Model
 {
     protected $fillable = [
         'profile_id',
-        'content',
+        'post_id',
     ];
 
     public function profile()
@@ -16,13 +16,8 @@ class Post extends Model
         return $this->belongsTo(Profile::class);
     }
 
-    public function likes()
+    public function post()
     {
-        return $this->hasMany(Like::class);
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
+        return $this->belongsTo(Post::class);
     }
 }
