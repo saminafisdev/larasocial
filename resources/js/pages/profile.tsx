@@ -76,6 +76,7 @@ import { Post } from '@/types/post';
 import { Profile } from '@/types/profile';
 import { usePage } from '@inertiajs/react';
 import { Calendar, GraduationCap, MapPin } from 'lucide-react';
+import { useState } from 'react';
 
 interface Props {
     profile: Profile;
@@ -85,21 +86,19 @@ interface Props {
 export default function ProfilePage({ profile, posts }: Props) {
     const { auth } = usePage<SharedData>().props;
     // const [posts, setPosts] = useState<Post[]>(mockPosts);
-    // const [isFollowing, setIsFollowing] = useState(false);
+    const [isFollowing, setIsFollowing] = useState(false);
 
-    console.log(posts);
+    const handleLike = (postId: number) => {
+        setPosts(
+            posts.map((post) =>
+                post.id === postId ? { ...post, isLiked: !post.isLiked, likes: post.isLiked ? post.likes - 1 : post.likes + 1 } : post,
+            ),
+        );
+    };
 
-    // const handleLike = (postId: number) => {
-    //     setPosts(
-    //         posts.map((post) =>
-    //             post.id === postId ? { ...post, isLiked: !post.isLiked, likes: post.isLiked ? post.likes - 1 : post.likes + 1 } : post,
-    //         ),
-    //     );
-    // };
-
-    // const handleFollow = () => {
-    //     setIsFollowing(!isFollowing);
-    // };
+    const handleFollow = () => {
+        setIsFollowing(!isFollowing);
+    };
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -197,18 +196,23 @@ export default function ProfilePage({ profile, posts }: Props) {
                 <div className="border-t border-gray-200 pt-6">
                     <h2 className="mb-6 text-xl font-semibold text-gray-900">Recent Posts</h2>
 
-                    <div className="space-y-6">
-                        {posts.map((post) => (
-                            <FeedPost key={post.id} post={post} />
-                        ))}
-                    </div>
-
-                    {/* Load More Button */}
-                    <div className="mt-8 text-center">
-                        <Button variant="outline" className="bg-transparent px-8">
-                            Load More Posts
-                        </Button>
-                    </div>
+                    {posts.length > 0 ? (
+                        <>
+                            <div className="space-y-6">
+                                {posts.map((post) => (
+                                    <FeedPost key={post.id} post={post} />
+                                ))}
+                            </div>
+                            {/* Load More Button */}
+                            <div className="mt-8 text-center">
+                                <Button variant="outline" className="bg-transparent px-8">
+                                    Load More Posts
+                                </Button>
+                            </div>
+                        </>
+                    ) : (
+                        <p className="text-center">No posts to show</p>
+                    )}
                 </div>
             </div>
         </div>
