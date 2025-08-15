@@ -2,6 +2,7 @@
 
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\Profile;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -24,13 +25,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
     })->name('feed');
 
+    // Post detail
     Route::get('/{username}/posts/{post}', function ($username, Post $post) {
-        $post->load(['profile.user', 'comments.profile']);
+        $post->load([
+            'profile.user',
+            'comments.profile.user'
+        ]);
+
         if ($post->profile->username !== $username) {
             abort(404);
         }
 
         $post->updated_at_human = $post->updated_at->diffForHumans();
+        $post->comments->transform(function ($comment) {
+            $comment->updated_at_human = $comment->updated_at->diffForHumans();
+            return $comment;
+        });
 
         return Inertia::render('post', [
             'post' => $post,
@@ -59,6 +69,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return redirect()->route('feed');
     })->name('posts.destroy');
 
+    // Likes
+    Route::post('/posts/{post}/like', function (Post $post) {
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $profileId = $user->profile->id;
+        $like = $post->likes()->where('profile_id', $profileId)->first();
+
+        if ($like) {
+            // Unlike the post
+            $like->delete();
+        } else {
+            // Like the post
+            $post->likes()->create(['profile_id' => $profileId]);
+        }
+
+        return back();
+    })->name('posts.like');
+
     // Comments
     Route::post('/{username}/posts/{post}/comments', function (String $username, Post $post) {
         $validated = request()->validate([
@@ -66,12 +97,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
 
         Comment::create([
-            'content'=> $validated['content'],
+            'content' => $validated['content'],
             'profile_id' => Auth::user()->profile->id,
             'post_id' => $post->id,
         ]);
 
-        return redirect()->route('posts.show', ['username'=> $username, 'post'=> $post->id]);
+        return redirect()->route('posts.show', ['username' => $username, 'post' => $post->id]);
     });
 
     Route::get('/friends', function () {
@@ -82,10 +113,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('messages');
     })->name('messages');
 
-    Route::get('/@johndoe', function () {
-        $profile = \App\Models\Profile::where('user_id', Auth::id())->first();
+    Route::get('/@{username}', function ($username) {
+        $profile = Profile::with(['user'])->where('username', $username)->firstOrFail();
+        $posts = $profile->posts()->with(['profile.user'])->withCount(['likes', 'comments'])->latest()->get();
         return Inertia::render('profile', [
             'profile' => $profile,
+            'posts' => $posts
         ]);
     })->name('profile');
 });

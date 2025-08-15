@@ -15,13 +15,20 @@ import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader,
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { SharedData } from '@/types';
 import { Post } from '@/types/post';
-import { Link, useForm, usePage } from '@inertiajs/react';
-import { Bookmark, Ellipsis, MessageCircle, Pencil, Share2, ThumbsUp, Trash2 } from 'lucide-react';
+import { timeAgo } from '@/utils/dateUtils';
+import { Link, router, useForm, usePage } from '@inertiajs/react';
+import { Bookmark, Ellipsis, Heart, MessageCircle, Pencil, Share2, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 export function FeedPost({ post }: { post: Post }) {
     const { auth } = usePage<SharedData>().props;
     const { delete: destroy } = useForm();
+
+    // Local state for instant UI updates
+    const [isLiked, setIsLiked] = useState<boolean>(post.is_liked);
+    const [likesCount, setLikesCount] = useState<number>(post.likes_count);
+    const [animate, setAnimate] = useState<boolean>(false);
 
     function deletePost() {
         destroy(`/posts/${post.id}`, {
@@ -34,6 +41,25 @@ export function FeedPost({ post }: { post: Post }) {
         });
     }
 
+    const handlePostLike = (postId: number) => {
+        const newLiked = !isLiked;
+        setIsLiked(newLiked);
+        setLikesCount((prev) => (newLiked ? prev + 1 : prev - 1));
+
+        // Trigger pop animation only on liking
+        if (newLiked) setAnimate(true);
+
+        // Send request to backend
+        router.post(
+            `/posts/${postId}/like`,
+            {},
+            {
+                preserveScroll: true,
+                preserveState: true,
+            },
+        );
+    };
+
     return (
         <Card className="gap-3 shadow">
             <CardHeader className="flex flex-row items-center gap-3 pb-2">
@@ -44,14 +70,14 @@ export function FeedPost({ post }: { post: Post }) {
                 <div>
                     <CardTitle className="text-base leading-tight font-semibold">{post?.profile?.user.name}</CardTitle>
                     <CardDescription className="text-xs text-gray-500">
-                        <Link href={`/${post.profile?.username}/posts/${post.id}`}>{post.updated_at_human}</Link>
+                        <Link href={`/${post.profile?.username}/posts/${post.id}`}>{timeAgo(post.updated_at)}</Link>
                     </CardDescription>
                 </div>
                 {post.profile?.user.id === auth.user.id && (
                     <CardAction className="ml-auto">
                         <DropdownMenu>
                             <DropdownMenuTrigger>
-                                <Ellipsis />
+                                <Ellipsis className="h-4 w-4" />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuItem>
@@ -92,14 +118,25 @@ export function FeedPost({ post }: { post: Post }) {
                 </div>
             </CardContent>
             <CardFooter className="mt-2 flex justify-between gap-4 border-t pt-2 text-sm text-gray-500">
-                <Button variant="ghost" size="lg" className="flex items-center gap-1 px-2">
-                    <ThumbsUp className="mr-2 h-4 w-4" /> 103
+                <Button
+                    variant="ghost"
+                    size="lg"
+                    className="flex items-center gap-1 px-2 transition-colors hover:text-red-500"
+                    onClick={() => handlePostLike(post.id)}
+                >
+                    <Heart
+                        className={`mr-2 h-4 w-4 ${isLiked ? 'fill-red-500 text-red-500' : ''} ${animate ? 'animate-pop' : ''}`}
+                        onAnimationEnd={() => setAnimate(false)} // reset after animation
+                    />
+                    <span className="text-sm font-medium">{likesCount}</span>
                 </Button>
-                <Button variant="ghost" size="lg" className="flex items-center gap-1 px-2">
-                    <MessageCircle className="mr-2 h-4 w-4" /> 22
+                <Button variant="ghost" size="lg" className="flex items-center gap-1 px-2 transition-colors hover:text-blue-500">
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    <span className="text-sm font-medium">{post.comments_count}</span>
                 </Button>
-                <Button variant="ghost" size="lg" className="flex items-center gap-1 px-2">
-                    <Share2 className="mr-2 h-4 w-4" /> 4.1k
+                <Button variant="ghost" size="lg" className="flex items-center gap-1 px-2 transition-colors hover:text-green-500">
+                    <Share2 className="mr-2 h-4 w-4" />
+                    <span className="text-sm font-medium">23</span>
                 </Button>
                 <Button variant="ghost" size="lg" className="flex items-center gap-1 px-2">
                     <Bookmark className="mr-2 h-4 w-4" /> Save

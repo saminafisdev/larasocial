@@ -18,6 +18,7 @@ export default function CommentComposer({ post }: { post: Post }) {
     const postComment = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         postHook(`/${post.profile?.username}/posts/${post.id}/comments`, {
+            preserveScroll: true,
             onSuccess: () => {
                 reset();
             },

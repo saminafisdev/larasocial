@@ -101,7 +101,7 @@ export function LeftSidebar() {
         <aside className="fixed top-[56px] left-0 hidden h-[calc(100vh-56px)] w-80 flex-col overflow-y-auto rounded-lg bg-white p-6 shadow md:flex">
             {/* Profile Button */}
             <Button variant="ghost" className="mb-6 w-full justify-start rounded-lg px-4 py-8 text-lg font-medium hover:bg-gray-100">
-                <Link href="/@johndoe" className="flex h-full w-full items-center">
+                <Link href={`/@${auth.user.profile.username}`} className="flex h-full w-full items-center">
                     <img
                         src="https://picsum.photos/id/91/600"
                         alt="John Doe"
