@@ -68,9 +68,15 @@ export function FeedPost({ post }: { post: Post }) {
                     <AvatarFallback>{post.profile?.user.name[0]}</AvatarFallback>
                 </Avatar>
                 <div>
-                    <CardTitle className="text-base leading-tight font-semibold">{post?.profile?.user.name}</CardTitle>
+                    <CardTitle className="text-base leading-tight font-semibold">
+                        <Link href={`/@${post.profile?.username}`} className="hover:underline">
+                            {post?.profile?.user.name}
+                        </Link>
+                    </CardTitle>
                     <CardDescription className="text-xs text-gray-500">
-                        <Link href={`/${post.profile?.username}/posts/${post.id}`}>{timeAgo(post.updated_at)}</Link>
+                        <Link href={`/${post.profile?.username}/posts/${post.id}`} className="hover:underline">
+                            {timeAgo(post.updated_at)}
+                        </Link>
                     </CardDescription>
                 </div>
                 {post.profile?.user.id === auth.user.id && (
