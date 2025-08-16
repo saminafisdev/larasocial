@@ -69,6 +69,7 @@
 
 import { FeedPost } from '@/components/feed/FeedPost';
 import EditProfile from '@/components/profile/edit-profile';
+import FriendButton from '@/components/profile/friend-button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -76,8 +77,7 @@ import { SharedData } from '@/types';
 import { Post } from '@/types/post';
 import { Profile } from '@/types/profile';
 import { usePage } from '@inertiajs/react';
-import { Calendar, GraduationCap, HatGlasses, MapPin, UserRoundPlus } from 'lucide-react';
-import { useState } from 'react';
+import { Calendar, GraduationCap, HatGlasses, MapPin } from 'lucide-react';
 
 interface Props {
     profile: Profile;
@@ -86,12 +86,6 @@ interface Props {
 
 export default function ProfilePage({ profile, posts }: Props) {
     const { auth } = usePage<SharedData>().props;
-    // const [posts, setPosts] = useState<Post[]>(mockPosts);
-    const [isFollowing, setIsFollowing] = useState(false);
-
-    const handleFollow = () => {
-        setIsFollowing(!isFollowing);
-    };
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -125,7 +119,7 @@ export default function ProfilePage({ profile, posts }: Props) {
                         {/* Stats */}
                         <div className="mt-4 flex gap-6">
                             <div className="text-center">
-                                <div className="text-lg font-bold text-gray-900">1,234</div>
+                                <div className="text-lg font-bold text-gray-900">{profile.friends_count}</div>
                                 <div className="text-sm text-gray-600">Friends</div>
                             </div>
                             <div className="text-center">
@@ -140,12 +134,7 @@ export default function ProfilePage({ profile, posts }: Props) {
                         <EditProfile profile={profile} />
                     ) : (
                         <div className="flex gap-2 sm:mt-0">
-                            <Button
-                                onClick={handleFollow}
-                                className={`px-6 ${isFollowing ? 'bg-gray-200 text-gray-800 hover:bg-gray-300' : 'bg-blue-600 hover:bg-blue-700'}`}
-                            >
-                                <UserRoundPlus /> Add Friend
-                            </Button>
+                            <FriendButton profileId={profile.id} friendshipStatus={profile.friendship_status} />
                             <Button variant="outline" className="bg-transparent px-6">
                                 Message
                             </Button>

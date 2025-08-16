@@ -8,4 +8,6 @@ export interface Profile {
     createdAt: Date;
     updatedAt: Date;
     posts_count?: number | null;
+    friendship_status?: 'pending_received' | 'pending_sent' | 'friends' | 'rejected' | null;
+    friends_count: number;
 }

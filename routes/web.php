@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\FriendshipController;
 use App\Models\Comment;
+use App\Models\Friendship;
 use App\Models\Post;
 use App\Models\Profile;
 use Illuminate\Http\Request;
@@ -133,8 +135,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Profile
     Route::get('/@{username}', function ($username) {
-        $profile = Profile::with(['user'])->withCount('posts')->where('username', $username)->firstOrFail();
+        $profile = Profile::with(['user'])->withCount(['posts'])->where('username', $username)->firstOrFail();
         $posts = $profile->posts()->with(['profile.user'])->withCount(['likes', 'comments'])->latest()->get();
+
         return Inertia::render('profile', [
             'profile' => $profile,
             'posts' => $posts
@@ -204,6 +207,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'gamesCount' => count($games),
         ]);
     })->name('games');
+
+    // Friendship routes
+    Route::post('/friends/request/{profile}', [FriendshipController::class, 'sendRequest']);
+    Route::post('/friends/accept/{profile}', [FriendshipController::class, 'acceptRequest']);
+    Route::post('/friends/reject/{profile}', [FriendshipController::class, 'rejectRequest']);
+    Route::post('/friends/cancel/{profile}', [FriendshipController::class, 'cancelRequest']);
+    Route::post('/friends/unfriend/{profile}', [FriendshipController::class, 'unfriendRequest']);
+    Route::get('/friends', [FriendshipController::class, 'index']);
 });
 
 require __DIR__ . '/settings.php';
