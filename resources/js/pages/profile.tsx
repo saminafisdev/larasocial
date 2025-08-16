@@ -76,7 +76,7 @@ import { SharedData } from '@/types';
 import { Post } from '@/types/post';
 import { Profile } from '@/types/profile';
 import { usePage } from '@inertiajs/react';
-import { Calendar, GraduationCap, HatGlasses, MapPin } from 'lucide-react';
+import { Calendar, GraduationCap, HatGlasses, MapPin, UserRoundPlus } from 'lucide-react';
 import { useState } from 'react';
 
 interface Props {
@@ -126,11 +126,7 @@ export default function ProfilePage({ profile, posts }: Props) {
                         <div className="mt-4 flex gap-6">
                             <div className="text-center">
                                 <div className="text-lg font-bold text-gray-900">1,234</div>
-                                <div className="text-sm text-gray-600">Following</div>
-                            </div>
-                            <div className="text-center">
-                                <div className="text-lg font-bold text-gray-900">5,678</div>
-                                <div className="text-sm text-gray-600">Followers</div>
+                                <div className="text-sm text-gray-600">Friends</div>
                             </div>
                             <div className="text-center">
                                 <div className="text-lg font-bold text-gray-900">{profile.posts_count}</div>
@@ -148,7 +144,7 @@ export default function ProfilePage({ profile, posts }: Props) {
                                 onClick={handleFollow}
                                 className={`px-6 ${isFollowing ? 'bg-gray-200 text-gray-800 hover:bg-gray-300' : 'bg-blue-600 hover:bg-blue-700'}`}
                             >
-                                {isFollowing ? 'Following' : 'Follow'}
+                                <UserRoundPlus /> Add Friend
                             </Button>
                             <Button variant="outline" className="bg-transparent px-6">
                                 Message
