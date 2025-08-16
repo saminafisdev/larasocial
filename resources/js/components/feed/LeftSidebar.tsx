@@ -92,7 +92,7 @@ export function LeftSidebar() {
         { href: '/friends', icon: <Users className="h-9 w-9" />, label: 'Friends' },
         { href: '/chat', icon: <MessageCircle className="h-9 w-9" />, label: 'Messages' },
         { href: '/notifications', icon: <Bell className="h-9 w-9" />, label: 'Notifications' },
-        { href: '/saved', icon: <Bookmark className="h-9 w-9" />, label: 'Saved' },
+        { href: '/bookmarks', icon: <Bookmark className="h-9 w-9" />, label: 'Bookmarks' },
         { href: '/settings', icon: <Settings className="h-9 w-9" />, label: 'Settings' },
     ];
 

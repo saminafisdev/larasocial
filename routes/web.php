@@ -137,6 +137,35 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'posts' => $posts
         ]);
     })->name('profile');
+
+
+    // Bookmark
+    Route::post('/posts/{post}/bookmark', function (Post $post) {
+        $user = Auth::user();
+
+        $profileId = $user->profile->id;
+        $bookmark = $post->bookmarks()->where('profile_id', $profileId)->first();
+
+        if ($bookmark) {
+            // Remove bookmark
+            $bookmark->delete();
+        } else {
+            // Add bookmark
+            $post->bookmarks()->create(['profile_id' => $profileId]);
+        }
+
+        return back();
+    })->name('posts.bookmark');
+
+    Route::get('/bookmarks', function () {
+        $user = Auth::user();
+
+        $bookmarks = $user->profile->bookmarks()->with(['post.profile.user'])->latest()->get();
+
+        return Inertia::render('bookmarks', [
+            'bookmarks' => $bookmarks,
+        ]);
+    })->name('bookmarks');
 });
 
 require __DIR__ . '/settings.php';

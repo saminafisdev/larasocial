@@ -144,8 +144,17 @@ export function FeedPost({ post }: { post: Post }) {
                     <Share2 className="mr-2 h-4 w-4" />
                     <span className="text-sm font-medium">23</span>
                 </Button>
-                <Button variant="ghost" size="lg" className="flex items-center gap-1 px-2">
-                    <Bookmark className="mr-2 h-4 w-4" /> Save
+
+                <Button
+                    // onClick={() => router.post(`/posts/${post.id}/bookmark`)}
+                    variant="ghost"
+                    size="icon"
+                    className="flex items-center gap-1 px-2 transition-colors"
+                    asChild
+                >
+                    <Link preserveScroll href={`/posts/${post.id}/bookmark`} method="post">
+                        <Bookmark className={`mr-2 h-4 w-4 ${post.is_bookmarked ? 'fill-black text-black' : ''} hover:text-black-500`} />
+                    </Link>
                 </Button>
             </CardFooter>
         </Card>

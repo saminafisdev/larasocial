@@ -12,7 +12,6 @@ class Profile extends Model
         'bio',
         'avatar',
         'location',
-        // Add other profile fields here
     ];
 
     public function user()
@@ -36,8 +35,13 @@ class Profile extends Model
             ->withPivot('joined_at');
     }
 
-    public function messages()
+    public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
+    }
+
+    public function bookmarks(): HasMany
+    {
+        return $this->hasMany(Bookmark::class);
     }
 }
