@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Profile extends Model
 {
@@ -27,5 +28,16 @@ class Profile extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_profile')
+            ->withPivot('joined_at');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
     }
 }

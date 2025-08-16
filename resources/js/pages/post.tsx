@@ -6,7 +6,7 @@ import { usePage } from '@inertiajs/react';
 
 export default function Post({ post }: { post: Post }) {
     const { auth } = usePage<SharedData>().props;
-    console.log(auth);
+    console.log(post);
     return (
         <>
             <FeedPost post={post} />

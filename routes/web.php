@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Profile;
@@ -12,6 +13,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
+    // Feed
+    // Mahfuj
     Route::get('/', function () {
         $posts = Post::with(['profile.user', 'comments.profile'])->latest()->get();
 
@@ -47,6 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
     })->name('posts.show');
 
+    // Create a new post
     Route::post('/posts', function () {
         $validated = request()->validate([
             'content' => 'required|string',
@@ -60,6 +64,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return redirect()->route('feed');
     })->name('posts.store');
 
+    // Delete a post
     Route::delete('/posts/{post}', function (Post $post) {
         if ($post->profile->user_id !== Auth::id()) {
             abort(403);
@@ -109,10 +114,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('friends');
     })->name('friends');
 
-    Route::get('/messages', function () {
-        return Inertia::render('messages');
-    })->name('messages');
+    // Messages
+    // Route::get('/messages', function () {
+    //     return Inertia::render('messages');
+    // })->name('messages');
 
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+
+    Route::get('/chat/{otherProfile:username}', [ChatController::class, 'show'])->name('chat.show');
+
+    // Route to send a message to a specific receiver profile
+    // {receiverProfile} will be route-model bound to a Profile instance
+    Route::post('/chat/{receiverProfile}/send', [ChatController::class, 'store'])->name('chat.store');
+
+
+    // Profile
     Route::get('/@{username}', function ($username) {
         $profile = Profile::with(['user'])->where('username', $username)->firstOrFail();
         $posts = $profile->posts()->with(['profile.user'])->withCount(['likes', 'comments'])->latest()->get();
