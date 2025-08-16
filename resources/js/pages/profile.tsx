@@ -76,7 +76,7 @@ import { SharedData } from '@/types';
 import { Post } from '@/types/post';
 import { Profile } from '@/types/profile';
 import { usePage } from '@inertiajs/react';
-import { Calendar, GraduationCap, MapPin } from 'lucide-react';
+import { Calendar, GraduationCap, HatGlasses, MapPin } from 'lucide-react';
 import { useState } from 'react';
 
 interface Props {
@@ -88,14 +88,6 @@ export default function ProfilePage({ profile, posts }: Props) {
     const { auth } = usePage<SharedData>().props;
     // const [posts, setPosts] = useState<Post[]>(mockPosts);
     const [isFollowing, setIsFollowing] = useState(false);
-
-    const handleLike = (postId: number) => {
-        setPosts(
-            posts.map((post) =>
-                post.id === postId ? { ...post, isLiked: !post.isLiked, likes: post.isLiked ? post.likes - 1 : post.likes + 1 } : post,
-            ),
-        );
-    };
 
     const handleFollow = () => {
         setIsFollowing(!isFollowing);
@@ -113,7 +105,9 @@ export default function ProfilePage({ profile, posts }: Props) {
                 <div className="absolute -bottom-16 left-4 sm:left-8">
                     <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
                         <AvatarImage src="/placeholder.svg?height=128&width=128" alt="Profile picture" />
-                        <AvatarFallback className="text-2xl">SA</AvatarFallback>
+                        <AvatarFallback className="text-2xl">
+                            <HatGlasses className="h-12 w-12" />
+                        </AvatarFallback>
                     </Avatar>
                 </div>
             </div>
