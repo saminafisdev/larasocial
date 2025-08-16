@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Bell, Bookmark, House, MessageCircle, RefreshCcw, Settings, Users } from 'lucide-react';
+import { Bell, Bookmark, Gamepad2, House, MessageCircle, RefreshCcw, Settings, Users } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
@@ -93,6 +93,7 @@ export function LeftSidebar() {
         { href: '/chat', icon: <MessageCircle className="h-9 w-9" />, label: 'Messages' },
         { href: '/notifications', icon: <Bell className="h-9 w-9" />, label: 'Notifications' },
         { href: '/bookmarks', icon: <Bookmark className="h-9 w-9" />, label: 'Bookmarks' },
+        { href: '/games', icon: <Gamepad2 className="h-9 w-9" />, label: 'Games' },
         { href: '/settings', icon: <Settings className="h-9 w-9" />, label: 'Settings' },
     ];
 

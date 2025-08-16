@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -191,6 +192,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'bookmarks' => $bookmarks,
         ]);
     })->name('bookmarks');
+
+
+    // Games
+    Route::get('/games', function () {
+        $response = Http::get('https://www.onlinegames.io/media/plugins/genGames/embed.json');
+        $games = $response->json();
+
+        return Inertia::render('games', [
+            'games' => $games,
+            'gamesCount' => count($games),
+        ]);
+    })->name('games');
 });
 
 require __DIR__ . '/settings.php';
