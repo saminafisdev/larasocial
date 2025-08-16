@@ -4,9 +4,11 @@ use App\Http\Controllers\ChatController;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Profile;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
@@ -130,13 +132,36 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Profile
     Route::get('/@{username}', function ($username) {
-        $profile = Profile::with(['user'])->where('username', $username)->firstOrFail();
+        $profile = Profile::with(['user'])->withCount('posts')->where('username', $username)->firstOrFail();
         $posts = $profile->posts()->with(['profile.user'])->withCount(['likes', 'comments'])->latest()->get();
         return Inertia::render('profile', [
             'profile' => $profile,
             'posts' => $posts
         ]);
     })->name('profile');
+
+    Route::patch('/{username}', function (Request $request, $username) {
+        $userProfile = Auth::user()->profile;
+        $editProfile = Profile::where('username', $username)->firstOrFail();
+
+        if ($userProfile->id !== $editProfile->id) {
+            abort(403);
+        }
+        $validated = $request->validate([
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('profiles')->ignore($editProfile->id),
+            ],
+            'bio' => 'nullable|string|max:500',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'location' => 'nullable|string|max:255',
+            // Add other profile fields here
+        ]);
+        $editProfile->update($validated);
+        return redirect()->route('profile', ['username' => $editProfile->username]);
+    })->name('profile.update');
 
 
     // Bookmark

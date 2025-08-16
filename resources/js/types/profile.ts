@@ -7,4 +7,5 @@ export interface Profile {
     location?: string | null;
     createdAt: Date;
     updatedAt: Date;
+    posts_count?: number | null;
 }

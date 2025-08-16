@@ -68,6 +68,7 @@
 // }
 
 import { FeedPost } from '@/components/feed/FeedPost';
+import EditProfile from '@/components/profile/edit-profile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -125,10 +126,7 @@ export default function ProfilePage({ profile, posts }: Props) {
                         <p className="mt-1 text-gray-600">@{profile.username}</p>
 
                         {/* Bio */}
-                        <p className="mt-4 leading-relaxed text-gray-700">
-                            UX Designer & Adventure Enthusiast 🎨 Creating meaningful digital experiences. Love hiking, photography, and exploring new
-                            places. Always learning, always growing.
-                        </p>
+                        {profile.bio && <p className="mt-4 leading-relaxed text-gray-700">{profile.bio}</p>}
 
                         {/* Stats */}
                         <div className="mt-4 flex gap-6">
@@ -141,7 +139,7 @@ export default function ProfilePage({ profile, posts }: Props) {
                                 <div className="text-sm text-gray-600">Followers</div>
                             </div>
                             <div className="text-center">
-                                <div className="text-lg font-bold text-gray-900">342</div>
+                                <div className="text-lg font-bold text-gray-900">{profile.posts_count}</div>
                                 <div className="text-sm text-gray-600">Posts</div>
                             </div>
                         </div>
@@ -149,7 +147,7 @@ export default function ProfilePage({ profile, posts }: Props) {
 
                     {/* Action Buttons */}
                     {auth.user?.id === profile.user.id ? (
-                        <Button className="bg-blue-600 px-6 text-white hover:bg-blue-700">Edit Profile</Button>
+                        <EditProfile profile={profile} />
                     ) : (
                         <div className="flex gap-2 sm:mt-0">
                             <Button
@@ -167,10 +165,12 @@ export default function ProfilePage({ profile, posts }: Props) {
 
                 {/* Additional Info */}
                 <div className="mt-6 flex flex-wrap gap-4">
-                    <div className="flex items-center gap-2 text-gray-600">
-                        <MapPin className="h-4 w-4" />
-                        <span className="text-sm">San Francisco, CA</span>
-                    </div>
+                    {profile.location && (
+                        <div className="flex items-center gap-2 text-gray-600">
+                            <MapPin className="h-4 w-4" />
+                            <span className="text-sm">{profile.location}</span>
+                        </div>
+                    )}
                     <div className="flex items-center gap-2 text-gray-600">
                         <GraduationCap className="h-4 w-4" />
                         <span className="text-sm">Stanford University</span>
