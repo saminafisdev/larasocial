@@ -15,22 +15,27 @@ import { Textarea } from '@/components/ui/textarea';
 import { type Profile } from '@/types/profile';
 import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
+import { toast } from 'sonner';
+import { DateOfBirthCalendar } from './calendar';
 
 export default function EditProfile({ profile }: { profile: Profile }) {
     const [open, setOpen] = useState(false);
-
     const { data, setData, patch, processing, errors } = useForm({
         username: profile.username ?? '',
         bio: profile.bio ?? '',
         location: profile.location ?? '',
         education: profile.education ?? '',
+        date_of_birth: profile.date_of_birth ?? '',
     });
 
     const handleUpdateProfile = (e: React.FormEvent) => {
         e.preventDefault();
+        console.log('Updating profile with data:', data);
+
         patch(`/${profile.username}`, {
             onSuccess: () => {
                 setOpen(false);
+                toast.success('Profile updated successfully!');
             },
             onError: (errors) => {
                 // Handle errors if needed
@@ -80,6 +85,12 @@ export default function EditProfile({ profile }: { profile: Profile }) {
                                 onChange={(e) => setData('education', e.target.value)}
                             />
                             {errors.education && <div className="text-sm font-semibold text-red-500">{errors.education}</div>}
+                        </div>
+                        <div className="grid gap-3">
+                            <div>
+                                <DateOfBirthCalendar defaultDate={data.date_of_birth} setData={setData} />
+                            </div>
+                            {errors.date_of_birth && <div className="text-sm font-semibold text-red-500">{errors.date_of_birth}</div>}
                         </div>
                     </div>
                     <DialogFooter>

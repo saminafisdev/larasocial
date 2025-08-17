@@ -6,6 +6,7 @@ use App\Models\Comment;
 use App\Models\Friendship;
 use App\Models\Post;
 use App\Models\Profile;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -137,7 +138,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/@{username}', function ($username) {
         $profile = Profile::with(['user'])->withCount(['posts'])->where('username', $username)->firstOrFail();
         $posts = $profile->posts()->with(['profile.user'])->withCount(['likes', 'comments'])->latest()->get();
-
         return Inertia::render('profile', [
             'profile' => $profile,
             'posts' => $posts
@@ -161,7 +161,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'bio' => 'nullable|string|max:500',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'location' => 'nullable|string|max:255',
-            // Add other profile fields here
+            'education' => 'nullable|string|max:255',
+            'date_of_birth' => 'nullable|date',
         ]);
         $editProfile->update($validated);
         return redirect()->route('profile', ['username' => $editProfile->username]);

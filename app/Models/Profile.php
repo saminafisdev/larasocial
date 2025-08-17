@@ -13,6 +13,8 @@ class Profile extends Model
         'bio',
         'avatar',
         'location',
+        'education',
+        'date_of_birth',
     ];
 
     protected $appends = ['friendship_status', 'friends_count'];
