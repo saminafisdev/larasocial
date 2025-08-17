@@ -102,17 +102,34 @@ class FriendshipController extends Controller
 
     public function index()
     {
-        $user = auth()->user();
+        // Get the ID of the authenticated user's profile.
+        $currentProfileId = Auth::user()->profile->id;
 
-        $friends = Friendship::where(function ($q) use ($user) {
-            $q->where('sender_id', $user->id)
-                ->orWhere('receiver_id', $user->id);
-        })->where('status', 'accepted')->get();
+        // First, get the IDs of all profiles that have any relationship with the current user.
+        // This includes pending, accepted, and rejected requests to prevent re-sending.
+        $relatedProfileIds = Friendship::query()
+            ->where('sender_profile_id', $currentProfileId)
+            ->orWhere('receiver_profile_id', $currentProfileId)
+            ->pluck('sender_profile_id', 'receiver_profile_id')
+            ->keys()
+            ->merge(Friendship::query()
+                ->where('sender_profile_id', $currentProfileId)
+                ->orWhere('receiver_profile_id', $currentProfileId)
+                ->pluck('sender_profile_id', 'receiver_profile_id')
+                ->values()
+            )
+            ->unique()
+            ->toArray();
 
-        $friendUsers = $friends->map(function ($friendship) use ($user) {
-            return $friendship->sender_id === $user->id ? $friendship->receiver : $friendship->sender;
-        });
+        // Add the current user's own profile ID to the list of exclusions.
+        $relatedProfileIds[] = $currentProfileId;
 
-        return response()->json(['friends' => $friendUsers]);
+        // Finally, get all profiles that are not in the list of related IDs.
+        $nonFriends = Profile::with('user')->whereNotIn('id', $relatedProfileIds)->get();
+
+        // Return the collection of non-friend profiles as a JSON response.
+        return inertia('friends', [
+            'suggestedFriends' => $nonFriends
+        ]);
     }
 }

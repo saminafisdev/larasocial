@@ -90,7 +90,7 @@ export function LeftSidebar() {
     const links = [
         { href: '/', icon: <House className="h-9 w-9" />, label: 'Home' },
         { href: '/friends', icon: <Users className="h-9 w-9" />, label: 'Friends' },
-        { href: '/chat', icon: <MessageCircle className="h-9 w-9" />, label: 'Messages' },
+        { href: '/chat/1', icon: <MessageCircle className="h-9 w-9" />, label: 'Messages' },
         { href: '/notifications', icon: <Bell className="h-9 w-9" />, label: 'Notifications' },
         { href: '/bookmarks', icon: <Bookmark className="h-9 w-9" />, label: 'Bookmarks' },
         { href: '/games', icon: <Gamepad2 className="h-9 w-9" />, label: 'Games' },
