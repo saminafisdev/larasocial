@@ -1,31 +1,104 @@
-# Roles
+# Project Roles and Responsibilities
 
-## Nafis
+This project uses Laravel for backend and routing, and React (TypeScript) for frontend components and pages.
 
-- Notifications
--
+Team Roles & Assigned Tasks
+Nafis
 
-## Mahfuj
+Notifications (implementation and management)
 
-- routes/web.php -> Feed
-- resources/js/pages/feed.tsx
-- routes/web.php -> Post detail
-- resources/js/pages/post.tsx
+Mahfuj
 
-## Jim
+Laravel Routes:
 
-- routes/web.php -> Create Post
-- routes/web.php -> Delete Post
-- resources/js/components/feed/FeedPost.tsx
+routes/web.php → Feed page
 
-## Nasif
+routes/web.php → Post detail page
 
-- routes/web.php -> Profile
-- resources/js/pages/profile.tsx
+React Pages:
 
-## Aisharjo
+resources/js/pages/feed.tsx
 
-- routes/settings.php
-- resources/js/pages/settings.tsx
-- routes/web.php -> Saved
-- resources/js/pages/saved.tsx
+resources/js/pages/post.tsx
+
+Jim
+
+Laravel Routes:
+
+routes/web.php → Create Post
+
+routes/web.php → Delete Post
+
+React Components:
+
+resources/js/components/feed/FeedPost.tsx
+
+Nasif
+
+Laravel Routes:
+
+routes/web.php → Profile page
+
+React Pages:
+
+resources/js/pages/profile.tsx
+
+Aisharjo
+
+Laravel Routes:
+
+routes/settings.php (custom settings routes)
+
+routes/web.php → Saved page
+
+React Pages:
+
+resources/js/pages/settings.tsx
+
+resources/js/pages/saved.tsx
+
+Project Structure Overview
+Backend (Laravel)
+
+Route definitions primarily in:
+
+routes/web.php
+
+routes/settings.php (settings-specific routes)
+
+Frontend (React + TypeScript)
+
+Page components under resources/js/pages/
+
+Shared or specific UI components under resources/js/components/
+
+Development Setup
+
+Clone the repository
+
+Install PHP dependencies:
+
+composer install
+
+
+Install JavaScript dependencies:
+
+npm install
+
+
+Compile frontend assets:
+
+npm run dev
+
+
+Run Laravel server:
+
+php artisan serve
+
+Notes
+
+Coordinate with team members on route and page integration.
+
+Follow the React components structure for UI consistency.
+
+Backend routes are organized in Laravel's routing files according to feature.
