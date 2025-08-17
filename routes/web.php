@@ -56,7 +56,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
     })->name('posts.show');
 
-    // Create a new post
+    // Create post
     Route::post('/posts', function () {
         $validated = request()->validate([
             'content' => 'required|string',
@@ -68,6 +68,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
 
         return redirect()->route('feed');
+    })->name('posts.store');
+
+    // Update post
+    Route::patch('/posts/{post}', function (Post $post) {
+        $validated = request()->validate([
+            'content' => 'required|string',
+        ]);
+
+        $post->update($validated);
+
+        return redirect()->back();
     })->name('posts.store');
 
     // Delete a post

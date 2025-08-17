@@ -17,9 +17,10 @@ import { SharedData } from '@/types';
 import { Post } from '@/types/post';
 import { timeAgo } from '@/utils/dateUtils';
 import { Link, router, useForm, usePage } from '@inertiajs/react';
-import { Bookmark, Ellipsis, Heart, MessageCircle, Pencil, Trash2 } from 'lucide-react';
+import { Bookmark, Ellipsis, Heart, MessageCircle, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { EditPostDialog } from './edit-post-dialog';
 
 export function FeedPost({ post }: { post: Post }) {
     const { auth } = usePage<SharedData>().props;
@@ -86,8 +87,8 @@ export function FeedPost({ post }: { post: Post }) {
                                 <Ellipsis className="h-4 w-4" />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuItem>
-                                    <Pencil /> Edit Post
+                                <DropdownMenuItem asChild>
+                                    <EditPostDialog post={post} />
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
                                     <AlertDialog>
