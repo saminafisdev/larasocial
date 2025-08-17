@@ -8,7 +8,7 @@ import Layout from '@/layouts/my-app-layout';
 import { configureEcho } from '@laravel/echo-react';
 
 configureEcho({
-    broadcaster: 'reverb',
+    broadcaster: "reverb",
     key: import.meta.env.VITE_REVERB_APP_KEY,
     wsHost: import.meta.env.VITE_REVERB_HOST,
     wsPort: import.meta.env.VITE_REVERB_PORT,

@@ -6,6 +6,7 @@ use App\Models\Comment;
 use App\Models\Friendship;
 use App\Models\Post;
 use App\Models\Profile;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -136,12 +137,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //     return Inertia::render('messages');
     // })->name('messages');
 
-    Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+    // Route::get('/chat', [ChatController::class, 'index'])->name('chat');
 
-    Route::get('/chat/{otherProfile:username}', [ChatController::class, 'show'])->name('chat.show');
+    // Route::get('/chat/{otherProfile:username}', [ChatController::class, 'show'])->name('chat.show');
 
-    // Route to send a message to a specific receiver profile
-    // {receiverProfile} will be route-model bound to a Profile instance
+    // // Route to send a message to a specific receiver profile
+    // // {receiverProfile} will be route-model bound to a Profile instance
+    // Route::post('/chat/{receiverProfile}/send', [ChatController::class, 'store'])->name('chat.store');
+
+    Route::get('/chat/{otherProfile}', [ChatController::class, 'show'])->name('chat.show');
     Route::post('/chat/{receiverProfile}/send', [ChatController::class, 'store'])->name('chat.store');
 
 
@@ -227,6 +231,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/friends/cancel/{profile}', [FriendshipController::class, 'cancelRequest']);
     Route::post('/friends/unfriend/{profile}', [FriendshipController::class, 'unfriendRequest']);
     Route::get('/friends', [FriendshipController::class, 'index']);
+
+
+    Route::get("/search", function(Request $request) {
+        $query = $request->input('q');
+
+        // If the query parameter exists, search posts and users
+        if ($query) {
+            // Search posts content
+            $posts = Post::where('content', 'like', "%$query%")->get();
+
+            return inertia('feed', [
+                'posts' => $posts
+            ]);
+        }
+    });
 });
 
 require __DIR__ . '/settings.php';

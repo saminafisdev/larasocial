@@ -120,9 +120,9 @@ export function FeedPost({ post }: { post: Post }) {
             </CardHeader>
             <CardContent className="py-2">
                 <div className="mb-4 text-[15px] text-gray-800">{post.content}</div>
-                <div>
+                {/* <div>
                     <img src={`https://picsum.photos/id/${post.id}/800/`} className="w-full" alt="" />
-                </div>
+                </div> */}
             </CardContent>
             <CardFooter className="mt-2 flex justify-between gap-4 border-t pt-2 text-sm text-gray-500">
                 <Button

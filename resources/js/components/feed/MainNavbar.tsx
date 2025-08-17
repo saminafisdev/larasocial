@@ -24,17 +24,20 @@ export function MainNavbar() {
         <nav className="sticky top-0 z-30 flex w-full items-center justify-between border-b bg-white px-4 py-2 shadow-sm">
             {/* Left: Logo/Title */}
             <div className="flex items-center gap-4">
-                <span className="text-2xl font-bold text-blue-600 select-none">Larasocial</span>
+                <Link href='/' className="text-2xl font-bold text-blue-600 select-none">Larasocial</Link>
             </div>
 
             {/* Center: Search Bar */}
             <div className="flex flex-1 justify-center px-4">
                 <div className="w-full max-w-md">
-                    <input
-                        type="search"
-                        placeholder="Search Larasocial..."
-                        className="rounded-full border-none bg-gray-100 px-5 py-2 shadow-sm focus:ring-2 focus:ring-blue-500"
-                    />
+                    <form action="/search">
+                        <input
+                            type="search"
+                            name='q'
+                            placeholder="Search Larasocial..."
+                            className="rounded-full border-none bg-gray-100 px-5 py-2 shadow-sm focus:ring-2 focus:ring-blue-500"
+                        />
+                    </form>
                 </div>
             </div>
 
