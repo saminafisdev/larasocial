@@ -1,4 +1,4 @@
-Project Roles and Responsibilities
+# Project Roles and Responsibilities
 
 This project uses Laravel for backend and routing, and React (TypeScript) for frontend components and pages.
 
