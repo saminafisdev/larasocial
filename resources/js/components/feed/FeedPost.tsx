@@ -17,7 +17,7 @@ import { SharedData } from '@/types';
 import { Post } from '@/types/post';
 import { timeAgo } from '@/utils/dateUtils';
 import { Link, router, useForm, usePage } from '@inertiajs/react';
-import { Bookmark, Ellipsis, Heart, MessageCircle, Pencil, Share2, Trash2 } from 'lucide-react';
+import { Bookmark, Ellipsis, Heart, MessageCircle, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -139,10 +139,6 @@ export function FeedPost({ post }: { post: Post }) {
                 <Button variant="ghost" size="lg" className="flex items-center gap-1 px-2 transition-colors hover:text-blue-500">
                     <MessageCircle className="mr-2 h-4 w-4" />
                     <span className="text-sm font-medium">{post.comments_count}</span>
-                </Button>
-                <Button variant="ghost" size="lg" className="flex items-center gap-1 px-2 transition-colors hover:text-green-500">
-                    <Share2 className="mr-2 h-4 w-4" />
-                    <span className="text-sm font-medium">23</span>
                 </Button>
 
                 <Button
